@@ -12,14 +12,10 @@ public class Television implements Comparable<Television> {
     private final boolean smart;
 
     public Television(final String make, final String model, final boolean smart, final int screenSize, final int resolution) {
-        if (make.isEmpty() || model.isEmpty() || make == null || model == null || screenSize < 32 || resolution < 720) {
-            throw new IllegalArgumentException("Invalid parameters");
+        if (make == null || model == null || screenSize < 32 || resolution < 720) {
+            throw new IllegalArgumentException("Invalid parameter in constructor");
         }
-        if (resolution == 2160) {
-            this.fourK = true;
-        } else {
-            this.fourK = false;
-        }
+        this.fourK = resolution == 2160;
         this.make = make;
         this.model = model;
         this.resolution = resolution;
@@ -34,52 +30,68 @@ public class Television implements Comparable<Television> {
     }
 
     public String getMake() {
-        return make;
+        return this.make;
     }
 
     public String getModel() {
-        return model;
+        return this.model;
     }
 
     public int getResolution() {
-        return resolution;
+        return this.resolution;
     }
 
     public int getScreenSize() {
-        return screenSize;
+        return this.screenSize;
     }
+
     @Override
     public String toString() {
         String smarttv, res;
-        if(this.fourK){res = "4K resolution";}else{res = resolution + " resolution";}
-        if(this.smart){smarttv = "smart tv";}else{smarttv = "tv";}
+        if (this.fourK) {
+            res = "4K resolution";
+        } else {
+            res = this.resolution + " resolution";
+        }
+        if (this.smart) {
+            smarttv = "smart tv";
+        } else {
+            smarttv = "tv";
+        }
 
 
-        String output = make + "-" + model + ", " + screenSize + " inch " + smarttv + " with " + res;
-        return output;
+        return this.make + "-" + this.model + ", " + this.screenSize + " inch " + smarttv + " with " + res;
     }
 
     @Override //Intellij generated
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Television that)) return false;
-        return fourK == that.fourK && resolution == that.resolution && screenSize == that.screenSize && smart == that.smart && Objects.equals(make, that.make) && Objects.equals(model, that.model);
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Television that)) {
+            return false;
+        }
+        return this.fourK == that.fourK && this.resolution == that.resolution && this.screenSize == that.screenSize && this.smart == that.smart && Objects.equals(this.make, that.make) && Objects.equals(this.model, that.model);
     }
 
     @Override //Intellij generated.
     public int hashCode() {
 
-        return Objects.hashCode(make) + Objects.hashCode(model) + Objects.hashCode(resolution) + Objects.hashCode(smart) + Objects.hashCode(fourK);
+        return Objects.hashCode(this.make) + Objects.hashCode(this.model) + Objects.hashCode(this.resolution) + Objects.hashCode(this.smart) + Objects.hashCode(this.fourK);
     }
 
     @Override
-    public int compareTo(Television another) {
-        if(another == null){throw new IllegalArgumentException("compareTo is null");}
-        int makeCompare = make.compareTo(another.make);
+    public int compareTo(final Television another) {
+        if (another == null) {
+            throw new IllegalArgumentException("null parameter in the compareTo method");
+        }
+
+        int makeCompare = this.make.compareTo(another.make);
         if (makeCompare == 0) {
-            int modelCompare = model.compareTo(another.model);
+            int modelCompare = this.model.compareTo(another.model);
             if (modelCompare == 0) {
-                return Integer.compare(screenSize, another.screenSize);
+
+                return this.screenSize - another.screenSize;
             }
             return modelCompare;
         }
